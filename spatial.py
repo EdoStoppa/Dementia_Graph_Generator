@@ -7,18 +7,18 @@ def add_sub_category(graph: Graph, spatial: Node, row, attributes, name, attr_na
     sub = Node(name)
     sub_rel = Relationship(spatial, 'SUB_CATEGORY', sub)
     graph.create(Subgraph([sub], [sub_rel]))
-    
+
     # Add all the features
     idx = base
     for attr_name in attr_names:
-        u.add_new_cat(graph, sub, row, attributes[idx:idx+4], attr_name)
+        u.add_cat_feat(graph, sub, row, attributes[idx:idx+4], attr_name)
         idx += 4
 
 def add_spatial(graph: Graph, data_path: str) -> None:
     # Load data into pandas
     data = pd.read_csv(data_path)
     # Get the columns names
-    attributes = list(data.columns)[1:]
+    feat_names = list(data.columns)[1:]
     
     for index, row in data.iterrows():
         print(f"    Working on {row['id']}...")
@@ -36,18 +36,18 @@ def add_spatial(graph: Graph, data_path: str) -> None:
 
         # Work on the HALVES category
         name = 'Halves'
-        attr_names = ['Left', 'Right']
-        add_sub_category(graph, spatial, row, attributes, name, attr_names, 0)
+        cat_names = ['Left', 'Right']
+        add_sub_category(graph, spatial, row, feat_names, name, cat_names, 0)
 
         # Work on the STRIPES category
         name = 'Stripes'
-        attr_names = ['Far_Left', 'Center_Left', 'Far_Right', 'Center_Right']
-        add_sub_category(graph, spatial, row, attributes, name, attr_names, 8)
+        cat_names = ['Far_Left', 'Center_Left', 'Far_Right', 'Center_Right']
+        add_sub_category(graph, spatial, row, feat_names, name, cat_names, 8)
 
         # Work on the QUADRANTS category
         name = 'Quadrants'
-        attr_names = ['Nord_West', 'Nord_East', 'South_East', 'South_West']
-        add_sub_category(graph, spatial, row, attributes, name, attr_names, 24)
+        cat_names = ['Nord_West', 'Nord_East', 'South_East', 'South_West']
+        add_sub_category(graph, spatial, row, feat_names, name, cat_names, 24)
 
 
     return

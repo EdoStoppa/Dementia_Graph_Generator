@@ -5,7 +5,7 @@ import util as u
 def add_general(graph: Graph, discourse: Node, row, attributes: list) -> None:
     nodes, rels = [], []
 
-    general = Node('General Discourse-Based')
+    general = Node('General_Discourse-Based')
     nodes.append(general)
     rels.append(Relationship(discourse, 'SUB_CATEGORY', general))
 
@@ -33,7 +33,7 @@ def add_rel(graph: Graph, acoustic: Node, row, attributes: list) -> None:
         nodes.append(new_node)
 
         # Create relation between master node and new subnode
-        rels.append(Relationship(relations, 'MADE_OF', new_node))
+        rels.append(Relationship(relations, 'SUB_CATEGORY', new_node))
 
         # Create feature nodes and relationships
         n, r = u.one_to_features(['pure', 'ratio'], [pure, ratio], row, new_node)
@@ -41,9 +41,9 @@ def add_rel(graph: Graph, acoustic: Node, row, attributes: list) -> None:
         rels += r
 
     # Add last special node
-    typ2tok = Node('Type 2 Token')
+    typ2tok = Node('Type_2_Token')
     nodes.append(typ2tok)
-    rels.append(Relationship(relations, 'MADE_OF', typ2tok))
+    rels.append(Relationship(relations, 'SUB_CATEGORY', typ2tok))
 
     new_node = Node('Feature', *{'ratio': attributes[-1]})
     nodes.append(new_node)

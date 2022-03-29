@@ -7,6 +7,7 @@ from anagraphic import add_anagraphic
 from acoustic import add_acoustic
 from psycholinguistic import add_psycholinguistic
 from discourse_based import add_discourse_based
+from spatial import add_spatial
 
 
 def add_patients(graph: Graph, data_path: str) -> None:
@@ -61,6 +62,11 @@ def main(args):
     print('\nAdding all the psycholinguistic info...')
     data_path = os.path.join(base_data_path, 'psycholinguistic_info.csv')
     add_psycholinguistic(graph, data_path)
+
+    # Add all the spatial info
+    print('\nAdding all the spatial info...')
+    data_path = os.path.join(base_data_path, 'spatial_info.csv')
+    add_spatial(graph, data_path)
 
     return
 

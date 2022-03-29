@@ -24,10 +24,10 @@ def add_psycholinguistic(graph: Graph, data_path: str) -> None:
 
         # Add all the energy features in the graph
         attrs = [attributes[0], attributes[1], attributes[2], attributes[5]]
-        u.add_new_cat(graph, psycho, row, attrs, 'Abstract')
+        u.add_cat_feat(graph, psycho, row, attrs, 'Abstract')
 
         # Add all the MFCC features in the graph
         attrs = [attributes[3], attributes[4]]
-        u.add_new_cat(graph, psycho, row, attrs, 'Factual')
+        u.add_cat_feat(graph, psycho, row, attrs, 'Factual')
 
     return
