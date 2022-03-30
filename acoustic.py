@@ -18,7 +18,7 @@ def add_energy(graph: Graph, acoustic: Node, row, attributes: list) -> None:
         nodes.append(new_node)
 
         # Create relation between master node and new subnode
-        rels.append(Relationship(energy, 'MADE_OF', new_node))
+        rels.append(Relationship(energy, 'SUB_CATEGORY', new_node))
 
         # Create feature nodes and relationships
         n, r = u.one_to_features(attr, row, new_node)
@@ -47,8 +47,7 @@ def add_mfcc(graph: Graph, acoustic: Node, row, attributes: list) -> None:
     rels.append(Relationship(mfcc, 'IS', mfcc_skew))
 
     attributes = attributes[:-2]
-    idx = 1
-    while idx <= 13:
+    for idx in range(1, 14):
         mfcc_num = Node(f'MFCC{idx}')
         nodes.append(mfcc_num)
         rels.append(Relationship(mfcc, 'SUB_CATEGORY', mfcc_num))
@@ -63,7 +62,7 @@ def add_mfcc(graph: Graph, acoustic: Node, row, attributes: list) -> None:
             nodes.append(new_node)
 
             # Create relation between master node and new subnode
-            rels.append(Relationship(mfcc_num, 'MADE_OF', new_node))
+            rels.append(Relationship(mfcc_num, 'SUB_CATEGORY', new_node))
 
             # Create feature nodes and relationships
             n, r = u.one_to_features(attr, row, new_node)
@@ -100,6 +99,4 @@ def add_acoustic(graph: Graph, data_path: str) -> None:
         # Add all the MFCC features in the graph
         add_mfcc(graph, acoustic, row, attributes[12:])
         
-        
-
     return

@@ -18,7 +18,7 @@ def get_patient_node(graph: Graph, id: str) -> Node:
 def one_to_features(feat_names: list, data, base_node: Node):
     nodes, relationships = [], []
     for feature in feat_names:
-        node = Node('Feature', *{feature: data[feature]})
+        node = Node('Feature', **{feature: data[feature]})
         nodes.append(node)
         rel = Relationship(base_node, 'IS', node)
         relationships.append(rel)
@@ -31,10 +31,10 @@ def one_to_features(feat_names: list, data, base_node: Node):
 # feat_data_names: Names of all features inside the dataframe row called "data"
 # data: row of a dataframe containing all the numerical features
 # base_node: starting node where to attach all the feature nodes
-def one_to_features(feat_names: list, feat_data_names: list, data, base_node: Node) -> None:
+def one_to_features2(feat_names: list, feat_data_names: list, data, base_node: Node) -> None:
     nodes, relationships = [], []
     for feat_name, feature in zip(feat_names, feat_data_names):
-        node = Node('Feature', *{feat_name: data[feature]})
+        node = Node('Feature', **{feat_name: data[feature]})
         nodes.append(node)
         rel = Relationship(base_node, 'IS', node)
         relationships.append(rel)

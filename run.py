@@ -1,12 +1,13 @@
 import argparse
 import os, sys
 import pandas as pd
-from py2neo import Graph, Node, Relationship, Subgraph
+from py2neo import Graph, Node, Subgraph
 
-from anagraphic import add_anagraphic
 from acoustic import add_acoustic
-from psycholinguistic import add_psycholinguistic
+from anagraphic import add_anagraphic
 from discourse_based import add_discourse_based
+from lexicosyntactic import add_lexicosyntactic
+from psycholinguistic import add_psycholinguistic
 from spatial import add_spatial
 
 
@@ -39,7 +40,7 @@ def main(args):
         sys.exit()
 
 
-    # First add all patients
+    """# First add all patients
     print('\nAdding all the patient nodes...')
     add_patients(graph, os.path.join(base_data_path, 'acoustic_info.csv'))
 
@@ -58,10 +59,15 @@ def main(args):
     data_path = os.path.join(base_data_path, 'discourse_info.csv')
     add_discourse_based(graph, data_path)
 
+    # Add all the lexicosyntactic info
+    print('\nAdding all the lexicosyntactic info...')
+    data_path = os.path.join(base_data_path, 'lexicosyntactic_info.csv')
+    add_lexicosyntactic(graph, data_path)
+
     # Add all the psycholinguistic info
     print('\nAdding all the psycholinguistic info...')
     data_path = os.path.join(base_data_path, 'psycholinguistic_info.csv')
-    add_psycholinguistic(graph, data_path)
+    add_psycholinguistic(graph, data_path)"""
 
     # Add all the spatial info
     print('\nAdding all the spatial info...')

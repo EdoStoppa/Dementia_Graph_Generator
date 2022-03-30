@@ -36,7 +36,7 @@ def add_rel(graph: Graph, acoustic: Node, row, attributes: list) -> None:
         rels.append(Relationship(relations, 'SUB_CATEGORY', new_node))
 
         # Create feature nodes and relationships
-        n, r = u.one_to_features(['pure', 'ratio'], [pure, ratio], row, new_node)
+        n, r = u.one_to_features2(['pure', 'ratio'], [pure, ratio], row, new_node)
         nodes += n
         rels += r
 
@@ -67,7 +67,7 @@ def add_discourse_based(graph: Graph, data_path: str) -> None:
         if patient is None: continue
 
         # Create a new CATEGORY node and BASE relationship
-        discourse = Node('Discourse-Based')
+        discourse = Node('Discourse_Based')
         discourse_rel = Relationship(patient, 'BASIC_CATEGORY', discourse)
 
         # Add the node and relationship between patient and category

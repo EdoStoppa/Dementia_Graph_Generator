@@ -14,14 +14,14 @@ def add_anagraphic(graph: Graph, data_path: str) -> None:
         patient = get_patient_node(graph, row['id'])
         if patient is None: continue
         # Create a new CATEGORY node
-        anagraphic = Node('Anapgraphic')
+        anagraphic = Node('Anagraphic')
 
         # Add the relationship between patient and category
         graph.create(Relationship(patient, 'BASIC_CATEGORY', anagraphic))
         
         nodes, relationships = [], []
         for attribute in attributes:
-            node = Node('Feature', *{attribute: row[attribute]})
+            node = Node(attribute, **{attribute: row[attribute]})
             nodes.append(node)
             rel = Relationship(anagraphic, 'IS', node)
             relationships.append(rel)
