@@ -40,7 +40,7 @@ def main(args):
         sys.exit()
 
 
-    """# First add all patients
+    # First add all patients
     print('\nAdding all the patient nodes...')
     add_patients(graph, os.path.join(base_data_path, 'acoustic_info.csv'))
 
@@ -67,7 +67,7 @@ def main(args):
     # Add all the psycholinguistic info
     print('\nAdding all the psycholinguistic info...')
     data_path = os.path.join(base_data_path, 'psycholinguistic_info.csv')
-    add_psycholinguistic(graph, data_path)"""
+    add_psycholinguistic(graph, data_path)
 
     # Add all the spatial info
     print('\nAdding all the spatial info...')

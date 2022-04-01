@@ -21,7 +21,7 @@ def add_anagraphic(graph: Graph, data_path: str) -> None:
         
         nodes, relationships = [], []
         for attribute in attributes:
-            node = Node(attribute, **{attribute: row[attribute]})
+            node = Node(attribute, **{'value': row[attribute]})
             nodes.append(node)
             rel = Relationship(anagraphic, 'IS', node)
             relationships.append(rel)

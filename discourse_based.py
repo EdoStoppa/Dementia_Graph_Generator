@@ -45,7 +45,7 @@ def add_rel(graph: Graph, acoustic: Node, row, attributes: list) -> None:
     nodes.append(typ2tok)
     rels.append(Relationship(relations, 'SUB_CATEGORY', typ2tok))
 
-    new_node = Node('Feature', *{'ratio': attributes[-1]})
+    new_node = Node(attributes[-1], **{'value': row[attributes[-1]]})
     nodes.append(new_node)
     rels.append(Relationship(typ2tok, 'IS', new_node))
 

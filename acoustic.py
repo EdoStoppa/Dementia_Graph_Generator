@@ -38,11 +38,11 @@ def add_mfcc(graph: Graph, acoustic: Node, row, attributes: list) -> None:
     rels.append(Relationship(acoustic, 'SUB_CATEGORY', mfcc))
 
     # Add kurtosis for general MFCC
-    mfcc_kurt = Node('Feature', *{attributes[-1]: row[attributes[-1]]})
+    mfcc_kurt = Node(attributes[-1], *{'value': row[attributes[-1]]})
     nodes.append(mfcc_kurt)
     rels.append(Relationship(mfcc, 'IS', mfcc_kurt))
     # Add skew for general MFCC
-    mfcc_skew = Node('Feature', *{attributes[-2]: row[attributes[-2]]})
+    mfcc_skew = Node(attributes[-2], *{'value': row[attributes[-2]]})
     nodes.append(mfcc_skew)
     rels.append(Relationship(mfcc, 'IS', mfcc_skew))
 
