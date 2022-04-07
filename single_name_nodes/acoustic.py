@@ -27,8 +27,6 @@ def add_energy(graph: Graph, acoustic: Node, row, attributes: list) -> None:
 
     graph.create(Subgraph(nodes, rels))
 
-    return
-
 def add_mfcc(graph: Graph, acoustic: Node, row, attributes: list) -> None:
     nodes, rels = [], []
 
@@ -38,11 +36,11 @@ def add_mfcc(graph: Graph, acoustic: Node, row, attributes: list) -> None:
     rels.append(Relationship(acoustic, 'SUB_CATEGORY', mfcc))
 
     # Add kurtosis for general MFCC
-    mfcc_kurt = Node(attributes[-1], *{'value': row[attributes[-1]]})
+    mfcc_kurt = Node(attributes[-1], **{'value': row[attributes[-1]]})
     nodes.append(mfcc_kurt)
     rels.append(Relationship(mfcc, 'IS', mfcc_kurt))
     # Add skew for general MFCC
-    mfcc_skew = Node(attributes[-2], *{'value': row[attributes[-2]]})
+    mfcc_skew = Node(attributes[-2], **{'value': row[attributes[-2]]})
     nodes.append(mfcc_skew)
     rels.append(Relationship(mfcc, 'IS', mfcc_skew))
 
@@ -71,8 +69,6 @@ def add_mfcc(graph: Graph, acoustic: Node, row, attributes: list) -> None:
 
     graph.create(Subgraph(nodes, rels))
 
-    return
-
 def add_acoustic(graph: Graph, data_path: str) -> None:
     # Load data into pandas
     data = pd.read_csv(data_path)
@@ -98,5 +94,3 @@ def add_acoustic(graph: Graph, data_path: str) -> None:
 
         # Add all the MFCC features in the graph
         add_mfcc(graph, acoustic, row, attributes[12:])
-        
-    return

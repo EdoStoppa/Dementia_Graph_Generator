@@ -16,7 +16,7 @@ def add_psycholinguistic(graph: Graph, data_path: str) -> None:
         if patient is None: continue
 
         # Create a new CATEGORY node and BASE relationship
-        psycho = Node('Psycholinguistic')
+        psycho = Node(*['Feature_Type', 'Psycholinguistic'])
         psycho_rel = Relationship(patient, 'BASIC_CATEGORY', psycho)
 
         # Add the node and relationship between patient and category
@@ -29,5 +29,3 @@ def add_psycholinguistic(graph: Graph, data_path: str) -> None:
         # Add all the MFCC features in the graph
         attrs = [attributes[3], attributes[4]]
         u.add_cat_feat(graph, psycho, row, attrs, 'Factual')
-
-    return

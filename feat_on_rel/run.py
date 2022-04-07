@@ -3,12 +3,12 @@ import os, sys
 import pandas as pd
 from py2neo import Graph, Node, Subgraph
 
-from acoustic import add_acoustic
-from anagraphic import add_anagraphic
-from discourse_based import add_discourse_based
-from lexicosyntactic import add_lexicosyntactic
-from psycholinguistic import add_psycholinguistic
-from spatial import add_spatial
+from acoustic_rel import add_acoustic
+from anagraphic_rel import add_anagraphic
+from discourse_based_rel import add_discourse_based
+from lexicosyntactic_rel import add_lexicosyntactic
+from psycholinguistic_rel import add_psycholinguistic
+from spatial_rel import add_spatial
 
 
 def add_patients(graph: Graph, data_path: str) -> None:
@@ -24,8 +24,6 @@ def add_patients(graph: Graph, data_path: str) -> None:
     
     # Load into graph database
     graph.create(Subgraph(nodes=nodes))
-
-    return
 
 def main(args):
     base_data_path = args.data_path
@@ -74,7 +72,7 @@ def main(args):
     data_path = os.path.join(base_data_path, 'spatial_info.csv')
     add_spatial(graph, data_path)
 
-    return
+    print('\nEverything complete!')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

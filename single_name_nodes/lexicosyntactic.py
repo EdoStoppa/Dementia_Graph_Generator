@@ -88,6 +88,3 @@ def add_lexicosyntactic(graph: Graph, data_path: str) -> None:
         syn = Node('Syntactic')
         graph.create(Relationship(patient, 'BASIC_CATEGORY', syn))
         add_syntactic_features(graph, syn, row)
-        
-
-    return

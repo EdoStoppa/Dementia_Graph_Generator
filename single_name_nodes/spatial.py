@@ -48,6 +48,3 @@ def add_spatial(graph: Graph, data_path: str) -> None:
         name = 'Quadrants'
         cat_names = ['Nord_West', 'Nord_East', 'South_East', 'South_West']
         add_sub_category(graph, spatial, row, feat_names, name, cat_names, 24)
-
-
-    return
