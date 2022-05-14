@@ -3,7 +3,7 @@ from py2neo import Graph, Node, Relationship, Subgraph
 import util as u
 
 def create_sub_node_and_rel(graph: Graph, name: str, father: Node) -> Node:
-    sub = Node(name)
+    sub = Node(*['Category', name])
     sub_rel = Relationship(father, 'SUB_CATEGORY', sub)
     graph.create(Subgraph([sub], [sub_rel]))
 
@@ -76,17 +76,16 @@ def add_lexicosyntactic(graph: Graph, data_path: str) -> None:
     for index, row in data.iterrows():
         # Printing progress bar
         u.printProgressBar(index+1, len(data), bar_size=40)
-        
         # Get the patient node
         patient = u.get_patient_node(graph, row['id'])
         if patient is None: continue
         
         # ******** LEXICAL ********
-        lex = Node('Lexical')
+        lex = Node(*['Feature_Type', 'Lexical'])
         graph.create(Relationship(patient, 'BASIC_CATEGORY', lex))
         add_lexical_features(graph, lex, row)
 
         # ******** SYNTACTIC ********
-        syn = Node('Syntactic')
+        syn = Node(*['Feature_Type', 'Syntactic'])
         graph.create(Relationship(patient, 'BASIC_CATEGORY', syn))
         add_syntactic_features(graph, syn, row)

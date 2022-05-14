@@ -11,19 +11,20 @@ def add_anagraphic(graph: Graph, data_path: str) -> None:
     for index, row in data.iterrows():
         # Printing progress bar
         u.printProgressBar(index+1, len(data), bar_size=40)
-        
+
         # Get the patient node
         patient = u.get_patient_node(graph, row['id'])
         if patient is None: continue
+
         # Create a new CATEGORY node
-        anagraphic = Node('Anagraphic')
+        anagraphic = Node(*['Feature_Type', 'Anagraphic'])
 
         # Add the relationship between patient and category
         graph.create(Relationship(patient, 'BASIC_CATEGORY', anagraphic))
         
         nodes, relationships = [], []
         for attribute in attributes:
-            node = Node(attribute, **{'value': row[attribute]})
+            node = Node(*['Feature', attribute], **{'value': row[attribute]})
             nodes.append(node)
             rel = Relationship(anagraphic, 'IS', node)
             relationships.append(rel)

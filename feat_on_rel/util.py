@@ -23,11 +23,12 @@ def get_patient_node(graph: Graph, id: str) -> Node:
 # feat_names: Name of all features interested (used both in data retrieval and for naming purpose inside a node)
 # data: row of a dataframe containing all the numerical features
 # base_node: starting node where to attach all the feature nodes
-def one_to_features(feat_names: list, data, base_node: Node):
+def one_to_features(feat_names: list, base_node: Node, feat_dict: dict):
     nodes, relationships = [], []
     for feat_name in feat_names:
-        node = Node(feat_name, **{'value': float(data[feat_name])})
+        node = Node(*['Feature', feat_name])
         nodes.append(node)
+        feat_dict[feat_name] = node
         rel = Relationship(base_node, 'IS', node)
         relationships.append(rel)
 
@@ -39,11 +40,12 @@ def one_to_features(feat_names: list, data, base_node: Node):
 # feat_data_names: Names of all features inside the dataframe row called "data"
 # data: row of a dataframe containing all the numerical features
 # base_node: starting node where to attach all the feature nodes
-def one_to_features2(feat_names: list, feat_data_names: list, data, base_node: Node) -> None:
+def one_to_features2(feat_names: list, feat_data_names: list, base_node: Node, feat_dict: dict) -> None:
     nodes, relationships = [], []
     for feat_name, feature in zip(feat_names, feat_data_names):
-        node = Node(feat_name, **{'value': float(data[feature])})
+        node = Node(*['Feature', feat_name])
         nodes.append(node)
+        feat_dict[feature] = node
         rel = Relationship(base_node, 'IS', node)
         relationships.append(rel)
 
@@ -56,14 +58,14 @@ def one_to_features2(feat_names: list, feat_data_names: list, data, base_node: N
 # data: row of a dataframe containing all numerical features
 # feat_names: names of all the features involved
 # type: name of the new sub-category
-def add_cat_feat(graph: Graph, father: Node, data, feat_names: list, sub_name:str) -> None:
+def add_cat_feat(graph: Graph, father: Node, feat_names: list, sub_name:str, feat_dict: dict) -> None:
     nodes, rels = [], []
 
-    sub = Node(sub_name)
+    sub = Node(*['Category', sub_name])
     nodes.append(sub)
     rels.append(Relationship(father, 'SUB_CATEGORY', sub))
 
-    n, r = one_to_features(feat_names, data, sub)
+    n, r = one_to_features(feat_names, sub, feat_dict)
     nodes += n
     rels += r
 
@@ -77,12 +79,12 @@ def add_cat_feat(graph: Graph, father: Node, data, feat_names: list, sub_name:st
 # feat_name_lists: list of lists, each sub-list contains the features that will be connected to a not yet created sub-category
 # cat_name: name of the high level sub-category
 # sub_names: list of names of all 
-def add_sub_category(graph: Graph, father: Node, data, feat_name_lists: list, cat_name: str, sub_names: list) -> None:
+def add_sub_category(graph: Graph, father: Node, feat_name_lists: list, cat_name: str, sub_names: list, feat_dict: dict) -> None:
     # Work on the new sub node and sub relation
-    sub = Node(cat_name)
+    sub = Node(*['Category', cat_name])
     sub_rel = Relationship(father, 'SUB_CATEGORY', sub)
     graph.create(Subgraph([sub], [sub_rel]))
     
     # Add all the features
     for sub_name, feat_names in zip(sub_names, feat_name_lists):
-        add_cat_feat(graph, sub, data, feat_names, sub_name)
+        add_cat_feat(graph, sub, feat_names, sub_name, feat_dict)

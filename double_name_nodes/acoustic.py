@@ -5,7 +5,7 @@ import util as u
 def add_energy(graph: Graph, acoustic: Node, row, attributes: list) -> None:
     nodes, rels = [], []
 
-    energy = Node('Energy')
+    energy = Node(*['Category', 'Energy'])
     nodes.append(energy)
     rels.append(Relationship(acoustic, 'SUB_CATEGORY', energy))
 
@@ -14,7 +14,7 @@ def add_energy(graph: Graph, acoustic: Node, row, attributes: list) -> None:
 
     for attr, name in zip(attrs, names):
         # Create node for section of basic feature
-        new_node = Node(name)
+        new_node = Node(*['Category', name])
         nodes.append(new_node)
 
         # Create relation between master node and new subnode
@@ -31,22 +31,22 @@ def add_mfcc(graph: Graph, acoustic: Node, row, attributes: list) -> None:
     nodes, rels = [], []
 
     # Create general sub category of MFCC
-    mfcc = Node('MFCC')
+    mfcc = Node(*['Category', 'MFCC'])
     nodes.append(mfcc)
     rels.append(Relationship(acoustic, 'SUB_CATEGORY', mfcc))
 
     # Add kurtosis for general MFCC
-    mfcc_kurt = Node(attributes[-1], **{'value': row[attributes[-1]]})
+    mfcc_kurt = Node(*['Feature', attributes[-1]], **{'value': row[attributes[-1]]})
     nodes.append(mfcc_kurt)
     rels.append(Relationship(mfcc, 'IS', mfcc_kurt))
     # Add skew for general MFCC
-    mfcc_skew = Node(attributes[-2], **{'value': row[attributes[-2]]})
+    mfcc_skew = Node(*['Feature', attributes[-2]], **{'value': row[attributes[-2]]})
     nodes.append(mfcc_skew)
     rels.append(Relationship(mfcc, 'IS', mfcc_skew))
 
     attributes = attributes[:-2]
     for idx in range(1, 14):
-        mfcc_num = Node(f'MFCC{idx}')
+        mfcc_num = Node(*['Category', f'MFCC{idx}'])
         nodes.append(mfcc_num)
         rels.append(Relationship(mfcc, 'SUB_CATEGORY', mfcc_num))
 
@@ -56,7 +56,7 @@ def add_mfcc(graph: Graph, acoustic: Node, row, attributes: list) -> None:
 
         for attr, name in zip(attrs, names):
             # Create node for section of basic feature
-            new_node = Node(name)
+            new_node = Node(*['Category', name])
             nodes.append(new_node)
 
             # Create relation between master node and new subnode
@@ -78,13 +78,13 @@ def add_acoustic(graph: Graph, data_path: str) -> None:
     for index, row in data.iterrows():
         # Printing progress bar
         u.printProgressBar(index+1, len(data), bar_size=40)
-        
+
         # Get the patient node
         patient = u.get_patient_node(graph, row['id'])
         if patient is None: continue
 
         # Create a new CATEGORY node and BASE relationship
-        acoustic = Node('Acoustic')
+        acoustic = Node(*['Feature_Type', 'Acoustic'])
         acoustic_rel = Relationship(patient, 'BASIC_CATEGORY', acoustic)
 
         # Add the node and relationship between patient and category

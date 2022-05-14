@@ -4,7 +4,7 @@ import util as u
 
 def add_sub_category(graph: Graph, spatial: Node, row, attributes, name, attr_names, base):
     # Work on the new sub node and sub relation
-    sub = Node(name)
+    sub = Node(*['Category', name])
     sub_rel = Relationship(spatial, 'SUB_CATEGORY', sub)
     graph.create(Subgraph([sub], [sub_rel]))
 
@@ -23,13 +23,13 @@ def add_spatial(graph: Graph, data_path: str) -> None:
     for index, row in data.iterrows():
         # Printing progress bar
         u.printProgressBar(index+1, len(data), bar_size=40)
-        
+
         # Get the patient node
         patient = u.get_patient_node(graph, row['id'])
         if patient is None: continue
 
         # Create a new CATEGORY node and BASE relationship
-        spatial = Node('Spatial')
+        spatial = Node(*['Feature_Type', 'Spatial'])
         spatial_rel = Relationship(patient, 'BASIC_CATEGORY', spatial)
 
         # Add the node and relationship between patient and category

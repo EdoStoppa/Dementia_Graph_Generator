@@ -1,4 +1,12 @@
 from py2neo import Graph, Node, Relationship, Subgraph
+import sys
+
+# Simple function to print a completion bar
+def printProgressBar(iter, max_iter, bar_size=20, postText=''):
+    percentage = iter/max_iter
+    sys.stdout.write('\r')
+    sys.stdout.write(f"[{'■' * int(bar_size * percentage):{bar_size}s}] {int(100 * percentage)}%  {postText}")
+    sys.stdout.flush()
 
 # Given a graph and an id, return the node containing the patient associated with the id
 #
@@ -18,7 +26,7 @@ def get_patient_node(graph: Graph, id: str) -> Node:
 def one_to_features(feat_names: list, data, base_node: Node):
     nodes, relationships = [], []
     for feat_name in feat_names:
-        node = Node(*['Feature', feat_name], **{'value': data[feat_name]})
+        node = Node(*['Feature', feat_name], **{'value': float(data[feat_name])})
         nodes.append(node)
         rel = Relationship(base_node, 'IS', node)
         relationships.append(rel)
@@ -34,7 +42,7 @@ def one_to_features(feat_names: list, data, base_node: Node):
 def one_to_features2(feat_names: list, feat_data_names: list, data, base_node: Node) -> None:
     nodes, relationships = [], []
     for feat_name, feature in zip(feat_names, feat_data_names):
-        node = Node(*['Feature', feat_name], **{'value': data[feature]})
+        node = Node(*['Feature', feat_name], **{'value': float(data[feature])})
         nodes.append(node)
         rel = Relationship(base_node, 'IS', node)
         relationships.append(rel)

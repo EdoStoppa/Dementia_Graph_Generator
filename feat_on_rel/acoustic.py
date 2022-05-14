@@ -2,10 +2,10 @@ import pandas as pd
 from py2neo import Graph, Node, Relationship, Subgraph
 import util as u
 
-def add_energy(graph: Graph, acoustic: Node, row, attributes: list) -> None:
+def add_energy_struct(graph: Graph, acoustic: Node, attributes: list, feat_dict: dict) -> None:
     nodes, rels = [], []
 
-    energy = Node('Energy')
+    energy = Node(*['Category', 'Energy'])
     nodes.append(energy)
     rels.append(Relationship(acoustic, 'SUB_CATEGORY', energy))
 
@@ -14,39 +14,41 @@ def add_energy(graph: Graph, acoustic: Node, row, attributes: list) -> None:
 
     for attr, name in zip(attrs, names):
         # Create node for section of basic feature
-        new_node = Node(name)
+        new_node = Node(*['Category', name])
         nodes.append(new_node)
 
         # Create relation between master node and new subnode
         rels.append(Relationship(energy, 'SUB_CATEGORY', new_node))
 
         # Create feature nodes and relationships
-        n, r = u.one_to_features(attr, row, new_node)
+        n, r = u.one_to_features(attr, new_node, feat_dict)
         nodes += n
         rels += r
 
     graph.create(Subgraph(nodes, rels))
 
-def add_mfcc(graph: Graph, acoustic: Node, row, attributes: list) -> None:
+def add_mfcc_struct(graph: Graph, acoustic: Node, attributes: list, feat_dict: dict) -> None:
     nodes, rels = [], []
 
     # Create general sub category of MFCC
-    mfcc = Node('MFCC')
+    mfcc = Node(*['Category', 'MFCC'])
     nodes.append(mfcc)
     rels.append(Relationship(acoustic, 'SUB_CATEGORY', mfcc))
 
     # Add kurtosis for general MFCC
-    mfcc_kurt = Node(attributes[-1], **{'value': row[attributes[-1]]})
+    mfcc_kurt = Node(*['Feature', attributes[-1]])
     nodes.append(mfcc_kurt)
+    feat_dict[attributes[-1]] = mfcc_kurt
     rels.append(Relationship(mfcc, 'IS', mfcc_kurt))
     # Add skew for general MFCC
-    mfcc_skew = Node(attributes[-2], **{'value': row[attributes[-2]]})
+    mfcc_skew = Node(*['Feature', attributes[-2]])
     nodes.append(mfcc_skew)
+    feat_dict[attributes[-2]] = mfcc_skew
     rels.append(Relationship(mfcc, 'IS', mfcc_skew))
 
     attributes = attributes[:-2]
     for idx in range(1, 14):
-        mfcc_num = Node(f'MFCC{idx}')
+        mfcc_num = Node(*['Category', f'MFCC{idx}'])
         nodes.append(mfcc_num)
         rels.append(Relationship(mfcc, 'SUB_CATEGORY', mfcc_num))
 
@@ -56,18 +58,19 @@ def add_mfcc(graph: Graph, acoustic: Node, row, attributes: list) -> None:
 
         for attr, name in zip(attrs, names):
             # Create node for section of basic feature
-            new_node = Node(name)
+            new_node = Node(*['Category', name])
             nodes.append(new_node)
 
             # Create relation between master node and new subnode
             rels.append(Relationship(mfcc_num, 'SUB_CATEGORY', new_node))
 
             # Create feature nodes and relationships
-            n, r = u.one_to_features(attr, row, new_node)
+            n, r = u.one_to_features(attr, new_node, feat_dict)
             nodes += n
             rels += r
 
     graph.create(Subgraph(nodes, rels))
+
 
 def add_acoustic(graph: Graph, data_path: str) -> None:
     # Load data into pandas
@@ -75,23 +78,33 @@ def add_acoustic(graph: Graph, data_path: str) -> None:
     # Get the columns names
     attributes = list(data.columns)[1:]
     
+    # Create the base node
+    acoustic = Node(*['Feature_Type', 'Acoustic'])
+    graph.create(acoustic)
+
+    # Dictionary containing all feature node
+    feat_dict = {}
+
+    add_energy_struct(graph, acoustic, attributes[:12], feat_dict)
+    add_mfcc_struct(graph, acoustic, attributes[12:], feat_dict)
+    
+    rels = []
     for index, row in data.iterrows():
         # Printing progress bar
         u.printProgressBar(index+1, len(data), bar_size=40)
-        
+
         # Get the patient node
         patient = u.get_patient_node(graph, row['id'])
         if patient is None: continue
 
-        # Create a new CATEGORY node and BASE relationship
-        acoustic = Node('Acoustic')
-        acoustic_rel = Relationship(patient, 'BASIC_CATEGORY', acoustic)
+        # Add the base relation patient -> feature type
+        rels.append(Relationship(patient, 'FEATURE_TYPE', acoustic))
 
         # Add the node and relationship between patient and category
-        graph.create(Subgraph([acoustic], [acoustic_rel]))
+        for feat in attributes:
+            rels.append(Relationship(patient, 'VALUE', feat_dict[feat], **{'value': float(row[feat])}))
 
-        # Add all the energy features in the graph
-        add_energy(graph, acoustic, row, attributes[:12])
-
-        # Add all the MFCC features in the graph
-        add_mfcc(graph, acoustic, row, attributes[12:])
+        
+    # Add the feature relationships 
+    graph.create(Subgraph(relationships=rels))
+    
