@@ -1,5 +1,6 @@
 # *Dementia Graph Generator*
-Simple collection of scripts that, starting from multiple csv files, generate a graph representing all the Dementia Features of each patient
+Simple collection of scripts that, starting from multiple csv files, generate a graph representing all the Dementia Features of each patient.</br></br>
+*The ontology schema for the double labeled graphs is provided in the base directory of the project for better visualization.*
 
 ## Feature Categories and Subcategories
 In this section is described the categories and subcategories structure of every graph. It must be noted that if more categories/subcategories are at the same level and do not have any other sub level they are simply listed separated by a comma. All the feature names are omitted for brevity.
